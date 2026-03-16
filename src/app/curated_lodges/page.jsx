@@ -1051,7 +1051,7 @@ const CuratedLodgesPage = () => {
               A Partnership Built on Respect for Your Time
             </h2>
             <p className="onboarding-subtitle">
-              We've designed a seamless onboarding experience that requires minimal effort from you. Three simple steps to join an exclusive collection.
+              We&apos;ve designed a seamless onboarding experience that requires minimal effort from you. Three simple steps to join an exclusive collection.
             </p>
           </div>
 
