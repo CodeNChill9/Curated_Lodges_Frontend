@@ -976,7 +976,7 @@ const CuratedLodgesPage = () => {
                   </h2>
                   <div className="spotlight-underline"></div>
                   <p className="spotlight-description">
-                    We understand that your focus needs to be on your guests, not on managing complex booking systems. That&apos;s why we&apos;ve built an intuitive admin dashboard that puts you in complete control—without the complexity. Set your availability with a simple calendar, manage bookings with a click, and let our system handle guest confirmations automatically. No technical expertise required. Real-time updates ensure your property is always accurately represented online—all without any manual synchronization or technical headaches. No complex processes. Just a seamless, elegant connection that works in the background, so you can focus on what you do best.
+                    We understand that your focus needs to be on your guests, not on managing complex booking systems. That is why we have built an intuitive admin dashboard that puts you in complete control—without the complexity. Set your availability with a simple calendar, manage bookings with a click, and let our system handle guest confirmations automatically. No technical expertise required. Real-time updates ensure your property is always accurately represented online—all without any manual synchronization or technical headaches. No complex processes. Just a seamless, elegant connection that works in the background, so you can focus on what you do best.
                     {/* We understand that your focus needs to be on your guests,
                     not on managing multiple booking platforms. That's why we've
                     built a system that integrates directly with your existing
