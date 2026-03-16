@@ -17,7 +17,7 @@
 html,
 body {
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: clip;
   font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -29,6 +29,40 @@ body {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* ── Curated Lodges page buttons ── */
+a.register-btn,
+a.btn-final-cta {
+  background: #F1663F !important;
+  color: #fff !important;
+  text-decoration: none !important;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+a.register-btn {
+  padding: 14px 35px;
+  font-size: 1rem;
+  gap: 10px;
+}
+
+a.btn-final-cta {
+  padding: 18px 45px;
+  font-size: 1.125rem;
+  gap: 12px;
+}
+
+a.register-btn:hover,
+a.btn-final-cta:hover {
+  background: #d54d2a !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(241, 102, 63, 0.4);
 }
 
 h1, h2, h3, h4, h5, h6 {

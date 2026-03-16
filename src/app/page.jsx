@@ -5,6 +5,7 @@ import HeaderLogin from "@/components/Layout/HeaderLogin";
 import Footer from "@/components/Layout/Footer";
 import { useSelector } from "react-redux";
 import Image from "next/image";
+import Link from "next/link";
 
 const CuratedLodgesPage = () => {
   const isTokenRequired = useSelector((state) => state.tokenData.token);
@@ -835,10 +836,8 @@ const CuratedLodgesPage = () => {
                 {animatedTexts[currentText]}
               </h2>
             </div>
-            <a 
-              href="https://forms.gle/UQRS213DqL4aFXn28" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <Link 
+              href="/register-lodge"
               className="register-btn"
             >
               Register Your Lodge
@@ -849,7 +848,7 @@ const CuratedLodgesPage = () => {
                 height={18}
                 style={{ filter: 'brightness(0) invert(1)' }}
               />
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -1117,10 +1116,8 @@ const CuratedLodgesPage = () => {
             <p className="final-cta-description">
               The first step is a simple introduction. Begin your application to be considered for the Junglore Curated Collection. Our partnership team will review your property and reach out within 48 hours.
             </p>
-            <a 
-              href="https://forms.gle/UQRS213DqL4aFXn28" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <Link 
+              href="/register-lodge"
               className="btn-final-cta"
             >
               Register Your Lodge
@@ -1131,7 +1128,7 @@ const CuratedLodgesPage = () => {
                 height={18}
                 style={{ filter: 'brightness(0) invert(1)' }}
               />
-            </a>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,0 +1,210 @@
+/* ============================================================
+   ADMIN GLOBAL LAYOUT
+   ============================================================ */
+
+.loadingScreen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F4F6F4;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #EBEBEB;
+  border-top-color: #F1663F;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Login screen */
+.loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #F4F6F4;
+  padding: 2rem;
+}
+.loginCard {
+  background: #FFFFFF;
+  border: 1px solid #E2E8E4;
+  border-radius: 24px;
+  padding: 52px 48px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(30, 45, 39, 0.08), 0 4px 12px rgba(30, 45, 39, 0.04);
+}
+.loginIconRing {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #FFF1ED;
+  border-radius: 50%;
+  margin: 0 auto 24px auto;
+  box-shadow: 0 0 0 6px rgba(241, 102, 63, 0.08);
+}
+.loginTitle {
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #1E2D27;
+  margin-bottom: 8px;
+}
+.loginSub {
+  font-size: 0.9375rem;
+  color: #737373;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.loginInput {
+  padding: 13px 14px;
+  border: 1px solid #D4D4D4;
+  border-radius: 10px;
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+  transition: all 0.2s;
+}
+.loginInput:focus {
+  border-color: #F1663F;
+  box-shadow: 0 0 0 4px rgba(241, 102, 63, 0.08);
+}
+.loginError {
+  color: #EF4444;
+  font-size: 0.85rem;
+}
+.loginBtn {
+  background: #F1663F;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.loginBtn:hover {
+  background: #d9542e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(241, 102, 63, 0.35);
+}
+.loginBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Dashboard Layout */
+.dashboard {
+  min-height: 100vh;
+  background: #F4F6F4;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  background: #FFFFFF;
+  border-bottom: 1px solid #E2E8E4;
+  box-shadow: 0 1px 4px rgba(30, 45, 39, 0.06);
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+.headerInner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.headerBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.headerLogo {
+  font-weight: 700;
+  color: #1E2D27;
+  font-size: 1.1rem;
+}
+.headerSep {
+  color: #D4D4D4;
+}
+.headerTitle {
+  color: #737373;
+  font-weight: 500;
+}
+.navLinks {
+  margin-left: 20px;
+  display: flex;
+  gap: 8px;
+}
+.navLink {
+  color: #4B5E57;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.navLink:hover {
+  background: #F4F6F4;
+  color: #1E2D27;
+  border-color: #D4DCD8;
+}
+.navLink.active {
+  background: #FFF1ED;
+  color: #F1663F;
+  border-color: rgba(241, 102, 63, 0.3);
+  font-weight: 600;
+}
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.logoutBtn {
+  background: transparent;
+  border: 1px solid #D4DCD8;
+  padding: 7px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #4B5E57;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s;
+}
+.logoutBtn:hover {
+  background: #FEE2E2;
+  color: #991B1B;
+  border-color: #FCA5A5;
+}
+
+.coreContent {
+  flex: 1;
+}

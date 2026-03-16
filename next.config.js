@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Prevent Next.js from bundling server-only packages
+  serverExternalPackages: ["mongoose", "googleapis", "google-auth-library"],
   images: {
     remotePatterns: [
       {

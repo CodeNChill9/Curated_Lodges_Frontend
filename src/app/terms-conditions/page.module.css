@@ -1,0 +1,147 @@
+.main {
+  background: #F4F3EF;
+  min-height: 100vh;
+}
+
+/* ── Hero banner ─────────────────────────────────────────────── */
+.hero {
+  background: #1E2D27;
+  padding: 120px 2rem 72px;
+}
+.heroInner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.eyebrow {
+  display: inline-block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #F1663F;
+  background: rgba(241, 102, 63, 0.12);
+  border: 1px solid rgba(241, 102, 63, 0.25);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+.heroTitle {
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+.heroSub {
+  font-size: 1.0625rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.7;
+  max-width: 560px;
+}
+
+/* ── Document wrapper ────────────────────────────────────────── */
+.docWrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 3rem 2rem 6rem;
+}
+.docCard {
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid #E4E8E2;
+  box-shadow: 0 8px 32px rgba(30, 45, 39, 0.06);
+  overflow: hidden;
+}
+
+/* ── Sections ────────────────────────────────────────────────── */
+.section {
+  padding: 2.25rem 2.5rem;
+}
+.sectionHeader {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.sectionNum {
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #F1663F;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.sectionTitle {
+  font-size: 1.1875rem;
+  font-weight: 700;
+  color: #1E2D27;
+  line-height: 1.3;
+  border-left: 3px solid #F1663F;
+  padding-left: 0.875rem;
+  margin: 0;
+}
+.divider {
+  height: 1px;
+  background: #F0F2EE;
+  margin: 0 2.5rem;
+}
+
+/* ── Body text ───────────────────────────────────────────────── */
+.para {
+  font-size: 0.9375rem;
+  color: #3D4D47;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ── List ────────────────────────────────────────────────────── */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0.75rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+.list li {
+  font-size: 0.9375rem;
+  color: #3D4D47;
+  line-height: 1.8;
+  padding-left: 1.375rem;
+  position: relative;
+}
+.list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.65em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #CDD999;
+  flex-shrink: 0;
+}
+.list li strong {
+  color: #1E2D27;
+  font-weight: 600;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .hero {
+    padding: 56px 1.5rem 52px;
+  }
+  .section {
+    padding: 1.75rem 1.5rem;
+  }
+  .divider {
+    margin: 0 1.5rem;
+  }
+  .docWrap {
+    padding: 2rem 1rem 5rem;
+  }
+  .sectionTitle {
+    font-size: 1.0625rem;
+  }
+}

@@ -1,0 +1,331 @@
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.mainTop { margin-bottom: 0.5rem; }
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1E2D27;
+  letter-spacing: -0.025em;
+  margin-bottom: 0.5rem;
+}
+.pageSub {
+  font-size: 1.125rem;
+  color: #64748b;
+}
+
+/* ── Stat cards ─────────────────────────────────────────────── */
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+.statCard {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+  border: 1px solid #f1f5f9;
+  border-top: 3px solid #e2e8f0;
+  transition: box-shadow 0.2s;
+}
+.statCard:hover {
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.08);
+}
+/* Individual card accent colours */
+.statCard:nth-child(1) { border-top-color: #F1663F; }  /* Active — brand orange */
+.statCard:nth-child(2) { border-top-color: #CDD999; }  /* Used   — brand lime */
+.statCard:nth-child(3) { border-top-color: #e2e8f0; }  /* Expired — muted */
+.statCard:nth-child(4) { border-top-color: #1E2D27; }  /* Total  — brand dark green */
+
+.statNum {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #1E2D27;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.statLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Section shells ─────────────────────────────────────────── */
+.section {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+}
+.sectionToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.sectionToggle:hover { background: #f8fafc; }
+.sectionTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1E2D27;
+  margin: 0;
+}
+.sectionBody {
+  padding: 0 2rem 2rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+/* ── Create form ────────────────────────────────────────────── */
+.createForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-top: 2rem;
+}
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.fieldLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+}
+.optional { color: #94a3b8; font-weight: 400; font-size: 0.75rem; }
+.formInput {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  transition: all 0.2s;
+  outline: none;
+}
+.formInput:focus {
+  border-color: #F1663F;
+  box-shadow: 0 0 0 4px rgba(241, 102, 63, 0.08);
+}
+.formError {
+  color: #dc2626;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.createBtn {
+  align-self: flex-start;
+  background: #F1663F;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+.createBtn:hover:not(:disabled) {
+  background: #d9542e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(241, 102, 63, 0.3);
+}
+.createBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── New invite banner ──────────────────────────────────────── */
+.newInviteBanner {
+  margin-top: 2rem;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+.bannerTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #166534;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+.inviteUrlRow {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: white;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #dcfce7;
+}
+.inviteUrlText {
+  flex: 1;
+  font-family: monospace;
+  font-size: 0.875rem;
+  color: #166534;
+  word-break: break-all;
+}
+.copyBtn {
+  background: #F1663F;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+}
+.copyBtn:hover { background: #d9542e; }
+.copyBtnDone { background: #22c55e; }
+.bannerExpiry {
+  margin-top: 0.625rem;
+  font-size: 0.8125rem;
+  color: #166534;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  opacity: 0.8;
+}
+
+/* ── Existing invites section header ────────────────────────── */
+.tableHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 2rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
+}
+.refreshBtn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+.refreshBtn:hover {
+  background: #f1f5f9;
+  color: #1E2D27;
+}
+.refreshBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Invite table ───────────────────────────────────────────── */
+.inviteTable { width: 100%; overflow-x: auto; }
+
+/* Column labels row */
+.tableHeaderSub {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr 1fr 1fr;
+  padding: 0.75rem 1.5rem;
+  background: #f8fafc;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* Data rows */
+.tableRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.2fr 1fr 1fr;
+  padding: 1.25rem 1.5rem;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s;
+}
+.tableRow:last-child { border-bottom: none; }
+.tableRow:hover { background: #f8fafc; }
+.row_used    { opacity: 0.6; }
+.row_expired { opacity: 0.5; }
+
+/* Cell types */
+.cellLabelEmail { display: flex; flex-direction: column; gap: 0.25rem; }
+.cell { font-size: 0.875rem; color: #475569; }
+.rowLabel { font-weight: 600; color: #1E2D27; font-size: 0.9375rem; }
+.rowEmail  { font-size: 0.8125rem; color: #64748b; display: flex; align-items: center; gap: 0.25rem; }
+.noExpiry  { color: #94a3b8; font-style: italic; font-size: 0.875rem; }
+.usedAt    { display: block; font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
+
+/* Status pills */
+.statusPill {
+  display: inline-flex;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+.pill_pending { background: #FFF1ED; color: #F1663F; }  /* Active  — brand orange */
+.pill_used    { background: #f0fdf4; color: #166534; }  /* Used    — green */
+.pill_expired { background: #fef2f2; color: #991b1b; }  /* Expired — red */
+
+/* Action buttons */
+.cellActions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+.actionBtn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s;
+}
+.actionCopy:hover   { color: #F1663F; border-color: #F1663F; background: #FFF1ED; }
+.actionDelete:hover { color: #ef4444; border-color: #fecaca; background: #fff1f2; }
+
+/* Spinner */
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin { animation: spin 0.8s linear infinite; }
+
+/* Empty state */
+.emptyMsg {
+  padding: 3rem 2rem;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 0.9375rem;
+}
