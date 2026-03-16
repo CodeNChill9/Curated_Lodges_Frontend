@@ -9,7 +9,7 @@
   padding: 120px 2rem 72px;
 }
 .heroInner {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .eyebrow {
@@ -42,7 +42,7 @@
 
 /* ── Document wrapper ────────────────────────────────────────── */
 .docWrap {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 3rem 2rem 6rem;
 }

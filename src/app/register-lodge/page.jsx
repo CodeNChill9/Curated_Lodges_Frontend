@@ -182,7 +182,7 @@ const RegisterLodgePage = () => {
     if (step === 2) {
       ["originStory", "natureBlend", "naturalistPhilosophy", "afterSafariVibe", "conservation", "uniquePoints"].forEach((f) => {
         if (!formFields[f].trim()) errors[f] = "This field is required.";
-        else if (formFields[f].trim().length < 30) errors[f] = "Please write at least 30 characters.";
+        else if (formFields[f].trim().length < 10) errors[f] = "Please write at least 10 characters.";
       });
     }
 
