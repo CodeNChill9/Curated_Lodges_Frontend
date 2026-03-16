@@ -862,7 +862,7 @@ const CuratedLodgesPage = () => {
               A Partnership.
             </h2>
             <p className="partnership-description">
-              We don't just connect you with travelers. We tell your story, celebrate your vision, and amplify
+              We don&apos;t just connect you with travelers. We tell your story, celebrate your vision, and amplify
               what makes your resort extraordinary.
             </p>
           </div>
@@ -893,14 +893,14 @@ const CuratedLodgesPage = () => {
                   </h2>
                   <div className="spotlight-underline"></div>
                   <p className="spotlight-description">
-                    Your property is not just a place to stay; it's a culmination of
-                    passion, vision, and years of dedication. We don't believe in
+                    Your property is not just a place to stay; it&apos;s a culmination of
+                    passion, vision, and years of dedication. We don&apos;t believe in
                     generic listings. Our editorial team works closely with you to
                     craft a compelling narrative that captures the soul of your
                     lodge. Through stunning photography, immersive video, and
                     thoughtful storytelling, we create a digital experience that
                     mirrors the magic guests feel when they arrive at your door.
-                    We don't just list you; we feature you.
+                    We don&apos;t just list you; we feature you.
                   </p>
                 </div>
               </div>
@@ -970,7 +970,7 @@ const CuratedLodgesPage = () => {
                   </h2>
                   <div className="spotlight-underline"></div>
                   <p className="spotlight-description">
-                    We understand that your focus needs to be on your guests, not on managing complex booking systems. That's why we've built an intuitive admin dashboard that puts you in complete control—without the complexity. Set your availability with a simple calendar, manage bookings with a click, and let our system handle guest confirmations automatically. No technical expertise required. Real-time updates ensure your property is always accurately represented online—all without any manual synchronization or technical headaches. No complex processes. Just a seamless, elegant connection that works in the background, so you can focus on what you do best.
+                    We understand that your focus needs to be on your guests, not on managing complex booking systems. That&apos;s why we&apos;ve built an intuitive admin dashboard that puts you in complete control—without the complexity. Set your availability with a simple calendar, manage bookings with a click, and let our system handle guest confirmations automatically. No technical expertise required. Real-time updates ensure your property is always accurately represented online—all without any manual synchronization or technical headaches. No complex processes. Just a seamless, elegant connection that works in the background, so you can focus on what you do best.
                     {/* We understand that your focus needs to be on your guests,
                     not on managing multiple booking platforms. That's why we've
                     built a system that integrates directly with your existing
@@ -995,10 +995,10 @@ const CuratedLodgesPage = () => {
               FOUNDING PARTNERS
             </div>
             <h2 className="founding-title">
-              You're in Good Company
+              You&apos;re in Good Company
             </h2>
             <p className="founding-description">
-              Join an exclusive collection of the world's most distinguished wildlife lodges
+              Join an exclusive collection of the world&apos;s most distinguished wildlife lodges
             </p>
           </div>
 
