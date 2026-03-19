@@ -162,6 +162,11 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
+.newsletterInput:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .newsletterButton {
   width: 100%;
   padding: 1rem 2.5rem;
@@ -178,6 +183,44 @@
 .newsletterButton:hover {
   background-color: #d55535;
   transform: translateY(-2px);
+}
+
+.newsletterButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.statusMessage {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statusMessage.success {
+  background-color: rgba(205, 217, 153, 0.15);
+  border: 1px solid rgba(205, 217, 153, 0.3);
+  color: #CDD999;
+}
+
+.statusMessage.error {
+  background-color: rgba(241, 102, 63, 0.15);
+  border: 1px solid rgba(241, 102, 63, 0.3);
+  color: #F1663F;
 }
 
 .bottom {
