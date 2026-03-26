@@ -117,6 +117,8 @@ const RegisterLodgePage = () => {
       .catch(() => setInviteStatus("invalid"));
   }, []);
 
+  const STORAGE_KEY = "registerLodgeFormData";
+
   const [submitted, setSubmitted] = useState(false);
   const [tncAccepted, setTncAccepted] = useState(false);
   const [otherCategory, setOtherCategory] = useState("");
@@ -127,6 +129,10 @@ const RegisterLodgePage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [showAutosaved, setShowAutosaved] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [hasRestoredData, setHasRestoredData] = useState(false);
+  const [showRestoredToast, setShowRestoredToast] = useState(false);
 
   const [formFields, setFormFields] = useState({
     email: "", fullName: "", resortName: "", website: "", mainContact: "",
@@ -137,6 +143,113 @@ const RegisterLodgePage = () => {
   });
   const [fieldErrors, setFieldErrors] = useState({});
 
+  // ── Load saved form data on mount ──────────────────────────────────────
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.formFields) {
+          // Ensure numberOfRooms is a string for the input value
+          if (parsed.formFields.numberOfRooms) {
+            parsed.formFields.numberOfRooms = String(parsed.formFields.numberOfRooms);
+          }
+          setFormFields(parsed.formFields);
+        }
+        if (parsed.currentStep !== undefined) setCurrentStep(parsed.currentStep);
+        if (parsed.selectedCategory) setSelectedCategory(parsed.selectedCategory);
+        if (parsed.otherCategory) setOtherCategory(parsed.otherCategory);
+        if (parsed.mealPlans && Array.isArray(parsed.mealPlans)) setMealPlans(parsed.mealPlans);
+        if (parsed.tncAccepted) setTncAccepted(parsed.tncAccepted);
+        setHasRestoredData(true);
+
+        // Show toast notification
+        setTimeout(() => {
+          setShowRestoredToast(true);
+          // Auto-hide toast after 4 seconds
+          setTimeout(() => setShowRestoredToast(false), 4000);
+        }, 800);
+      }
+    } catch (err) {
+      console.warn("Failed to load saved form data:", err);
+      // If corrupted, clear the storage
+      try {
+        localStorage.removeItem(STORAGE_KEY);
+      } catch (clearErr) {
+        // Silent fail
+      }
+    } finally {
+      // Mark initial load as complete
+      setTimeout(() => setIsInitialLoad(false), 500);
+    }
+  }, []);
+
+  // ── Save form data to localStorage whenever it changes ─────────────────
+  useEffect(() => {
+    if (typeof window === "undefined" || inviteStatus !== "valid" || isInitialLoad) return;
+    try {
+      const dataToSave = {
+        formFields,
+        currentStep,
+        selectedCategory,
+        otherCategory,
+        mealPlans,
+        tncAccepted,
+        savedAt: new Date().toISOString(),
+      };
+      const jsonString = JSON.stringify(dataToSave);
+
+      // Check if data size is reasonable (< 4MB to be safe with 5MB limit)
+      if (jsonString.length > 4 * 1024 * 1024) {
+        console.warn("Form data too large for localStorage");
+        return;
+      }
+
+      localStorage.setItem(STORAGE_KEY, jsonString);
+
+      // Show autosave indicator briefly
+      setShowAutosaved(true);
+      const timer = setTimeout(() => setShowAutosaved(false), 2000);
+      return () => clearTimeout(timer);
+    } catch (err) {
+      // Handle quota exceeded or other storage errors
+      if (err.name === 'QuotaExceededError' || err.code === 22) {
+        console.error("localStorage quota exceeded");
+        // Try to clear old data and retry once
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+          const dataToSave = { formFields, currentStep, selectedCategory, otherCategory, mealPlans, tncAccepted };
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+        } catch (retryErr) {
+          console.error("Failed to save even after clearing:", retryErr);
+        }
+      } else {
+        console.warn("Failed to save form data:", err);
+      }
+    }
+  }, [formFields, currentStep, selectedCategory, otherCategory, mealPlans, tncAccepted, inviteStatus, isInitialLoad]);
+
+  // ── Warn user before leaving page with unsaved changes ─────────────────
+  useEffect(() => {
+    if (typeof window === "undefined" || inviteStatus !== "valid" || submitted) return;
+
+    const handleBeforeUnload = (e) => {
+      // Only warn if form has some data filled
+      const hasData = formFields.email || formFields.fullName || formFields.resortName ||
+                     formFields.originStory || formFields.address;
+
+      if (hasData) {
+        e.preventDefault();
+        e.returnValue = ''; // Chrome requires returnValue to be set
+        return ''; // Some browsers require a return value
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [formFields, inviteStatus, submitted]);
+
   const setField = (field) => (e) => {
     setFormFields((prev) => ({ ...prev, [field]: e.target.value }));
     setFieldErrors((prev) => ({ ...prev, [field]: "" }));
@@ -146,6 +259,30 @@ const RegisterLodgePage = () => {
 
   const scrollToTop = () => {
     setTimeout(() => rightPanelRef.current?.scrollTo({ top: 0, behavior: "smooth" }), 50);
+  };
+
+  const clearForm = () => {
+    if (confirm("Are you sure you want to clear all form data? This action cannot be undone.")) {
+      setFormFields({
+        email: "", fullName: "", resortName: "", website: "", mainContact: "",
+        address: "", mapsLink: "", numberOfRooms: "", roomTypes: "",
+        originStory: "", natureBlend: "", naturalistPhilosophy: "",
+        afterSafariVibe: "", conservation: "", uniquePoints: "",
+        mediaLink: "", paymentMethod: "", cancelPolicyText: "",
+      });
+      setCurrentStep(0);
+      setSelectedCategory("");
+      setOtherCategory("");
+      setMealPlans([]);
+      setTncAccepted(false);
+      setFactSheetFile(null);
+      setCancelPolicyFile(null);
+      setFieldErrors({});
+      setHasRestoredData(false);
+      setShowRestoredToast(false);
+      localStorage.removeItem(STORAGE_KEY);
+      scrollToTop();
+    }
   };
 
   const validateStep = (step) => {
@@ -205,7 +342,16 @@ const RegisterLodgePage = () => {
 
   const handleFileChange = (e, setter) => {
     const file = e.target.files[0];
-    if (file) setter(file);
+    if (file) {
+      // Validate file size (10 MB limit)
+      const maxSize = 10 * 1024 * 1024; // 10 MB in bytes
+      if (file.size > maxSize) {
+        alert(`File "${file.name}" is too large. Maximum file size is 10 MB.`);
+        e.target.value = ''; // Clear the input
+        return;
+      }
+      setter(file);
+    }
   };
 
   const nextStep = () => {
@@ -231,6 +377,13 @@ const RegisterLodgePage = () => {
       alert("Please accept the Terms & Conditions before submitting.");
       return;
     }
+
+    // Double-check invite token exists
+    if (!inviteToken) {
+      setSubmitError("Invitation token is missing. Please use the invite link from your email.");
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitError("");
     try {
@@ -246,13 +399,35 @@ const RegisterLodgePage = () => {
       if (inviteToken) data.append("inviteToken", inviteToken);
 
       const res = await fetch("/api/register-lodge", { method: "POST", body: data });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Submission failed");
+
+      // Check if response is JSON before parsing
+      const contentType = res.headers.get("content-type");
+      let json;
+
+      if (contentType && contentType.includes("application/json")) {
+        json = await res.json();
+      } else {
+        // Response is not JSON - likely an error page
+        const text = await res.text();
+        throw new Error(`Server error: ${res.status}. Please try again or contact support.`);
+      }
+
+      if (!res.ok) throw new Error(json.error || "Submission failed. Please try again.");
+
+      // Clear saved form data on successful submission
+      localStorage.removeItem(STORAGE_KEY);
 
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (err) {
-      setSubmitError(err.message);
+      setSubmitError(err.message || "An unexpected error occurred. Please try again.");
+      // Scroll to error message
+      setTimeout(() => {
+        const errorElement = document.querySelector('[style*="color: #c0392b"]');
+        if (errorElement) {
+          errorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
     } finally {
       setIsSubmitting(false);
     }
@@ -334,6 +509,34 @@ const RegisterLodgePage = () => {
   /* ---- Main form ---- */
   return (
     <>
+      {/* Toast notification for restored data */}
+      {showRestoredToast && (
+        <div style={{
+          position: "fixed",
+          top: showRestoredToast ? "24px" : "-100px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "#1E2D27",
+          color: "#fff",
+          padding: "14px 24px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          zIndex: 10000,
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          fontSize: "0.9rem",
+          transition: "top 0.4s ease, opacity 0.4s ease",
+          opacity: showRestoredToast ? 1 : 0,
+          maxWidth: "90%",
+        }}>
+          <CheckCircle2 size={18} strokeWidth={2} color="#CDD999" />
+          <div>
+            <strong>Welcome back!</strong> Your progress has been restored. All changes are auto-saved.
+          </div>
+        </div>
+      )}
+
       <div className={styles.splitWrap}>
 
         {/* ── Left Image Panel ── */}
@@ -385,6 +588,28 @@ const RegisterLodgePage = () => {
                 className={`${styles.mobilePill} ${currentStep >= i ? styles.mobilePillActive : ""}`}
               />
             ))}
+          </div>
+
+          {/* Autosave indicator */}
+          <div style={{
+            textAlign: "center",
+            marginTop: "12px",
+            fontSize: "0.7rem",
+            color: "#3a7a50",
+            opacity: showAutosaved ? 1 : 0,
+            transition: "opacity 0.3s ease",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "4px",
+            minHeight: "18px",
+          }}>
+            {showAutosaved && (
+              <>
+                <CheckCircle2 size={11} strokeWidth={2.5} />
+                Autosaved
+              </>
+            )}
           </div>
 
           <div className={styles.formInner}>
@@ -717,6 +942,18 @@ const RegisterLodgePage = () => {
                 </div>
               )}
 
+              {currentStep === 3 && !tncAccepted && (
+                <p style={{
+                  color: "#F1663F",
+                  textAlign: "center",
+                  marginTop: "8px",
+                  fontSize: "0.85rem",
+                  fontStyle: "italic"
+                }}>
+                  Please accept the Terms & Conditions to submit your application.
+                </p>
+              )}
+
               {currentStep === 3 && (
                 <>
                   {submitError && (
@@ -731,6 +968,31 @@ const RegisterLodgePage = () => {
               )}
 
             </form>
+
+            {/* Clear form button at bottom */}
+            <div style={{
+              textAlign: "center",
+              marginTop: "32px",
+              marginBottom: "24px",
+            }}>
+              <button
+                type="button"
+                onClick={clearForm}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#999",
+                  fontSize: "0.8rem",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  padding: "8px 12px",
+                }}
+                onMouseEnter={(e) => e.target.style.color = "#F1663F"}
+                onMouseLeave={(e) => e.target.style.color = "#999"}
+              >
+                Clear Form & Start Over
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -84,12 +84,106 @@ async function setFilePublic(drive, fileId) {
 
 export async function POST(request) {
   try {
+    // ── Early validation of environment variables ──────────────────────────
+    if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
+      console.error("[register-lodge] Missing Google Drive credentials");
+      return NextResponse.json(
+        { error: "Server configuration error. Please contact support." },
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    if (!process.env.GOOGLE_DRIVE_FOLDER_ID) {
+      console.error("[register-lodge] Missing Google Drive folder ID");
+      return NextResponse.json(
+        { error: "Server configuration error. Please contact support." },
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     const formData = await request.formData();
 
     // ── Verify invite token (server-side guard) ────────────────────────────
     const inviteTokenValue = formData.get("inviteToken");
     if (!inviteTokenValue) {
-      return NextResponse.json({ error: "Invitation required." }, { status: 401 });
+      return NextResponse.json(
+        { error: "Invitation required." },
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // ── Validate required fields ────────────────────────────────────────────
+    const requiredFields = [
+      "email", "fullName", "resortName", "website", "mainContact",
+      "address", "numberOfRooms", "resortCategory", "roomTypes",
+      "originStory", "natureBlend", "naturalistPhilosophy",
+      "afterSafariVibe", "conservation", "uniquePoints",
+      "mediaLink", "paymentMethod"
+    ];
+
+    const missingFields = requiredFields.filter(field => !formData.get(field)?.trim());
+
+    if (missingFields.length > 0) {
+      return NextResponse.json(
+        { error: `Missing required fields: ${missingFields.join(", ")}` },
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate email format
+    const email = formData.get("email")?.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: "Invalid email address format." },
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate URLs
+    const urlFields = ["website", "mediaLink"];
+    const urlRegex = /^https?:\/\/.+/i;
+    for (const field of urlFields) {
+      const value = formData.get(field)?.trim();
+      if (value && !urlRegex.test(value)) {
+        return NextResponse.json(
+          { error: `Invalid URL format for ${field}. Must start with http:// or https://` },
+          { status: 400, headers: { "Content-Type": "application/json" } }
+        );
+      }
+    }
+
+    // Validate optional mapsLink if provided
+    const mapsLink = formData.get("mapsLink")?.trim();
+    if (mapsLink) {
+      const lines = mapsLink.split("\n").filter(l => l.trim());
+      for (const line of lines) {
+        if (line.trim() && !urlRegex.test(line.trim())) {
+          return NextResponse.json(
+            { error: `Invalid URL format in Google Maps link: "${line.trim()}". Must start with http:// or https://` },
+            { status: 400, headers: { "Content-Type": "application/json" } }
+          );
+        }
+      }
+    }
+
+    // Validate numberOfRooms is a positive number
+    const numberOfRooms = formData.get("numberOfRooms");
+    const roomsNum = Number(numberOfRooms);
+    if (isNaN(roomsNum) || roomsNum < 1) {
+      return NextResponse.json(
+        { error: "Number of rooms must be a valid positive number." },
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate mealPlans array
+    const mealPlans = formData.getAll("mealPlans");
+    if (!mealPlans || mealPlans.length === 0) {
+      return NextResponse.json(
+        { error: "At least one meal plan must be selected." },
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
     }
 
     // DB connection and Drive OAuth warm-up run simultaneously
@@ -97,7 +191,10 @@ export async function POST(request) {
 
     const invite = await InviteToken.findOne({ token: inviteTokenValue });
     if (!invite || invite.used || (invite.expiresAt && invite.expiresAt < new Date())) {
-      return NextResponse.json({ error: "Invalid or expired invitation." }, { status: 401 });
+      return NextResponse.json(
+        { error: "Invalid or expired invitation." },
+        { status: 401, headers: { "Content-Type": "application/json" } }
+      );
     }
 
     // Allowed MIME types for uploads
@@ -121,24 +218,44 @@ export async function POST(request) {
     const factSheetFile = formData.get("factSheet");
     if (factSheetFile && factSheetFile.size > 0) {
       if (!ALLOWED_MIME.has(factSheetFile.type)) {
-        return NextResponse.json({ error: "Fact sheet must be a PDF file." }, { status: 400 });
+        return NextResponse.json(
+          { error: "Fact sheet must be a PDF file." },
+          { status: 400, headers: { "Content-Type": "application/json" } }
+        );
       }
+      // Sanitize file name
+      const safeName = factSheetFile.name.replace(/[/\\?%*:|"<>]/g, "-");
       uploads.push({
         key: "factSheet",
-        name: factSheetFile.name,
+        name: safeName,
         mimeType: factSheetFile.type,
         bufferPromise: factSheetFile.arrayBuffer().then(ab => Buffer.from(ab)),
       });
     }
 
     const cancelPolicyFile = formData.get("cancelPolicyFile");
+    const cancelPolicyText = formData.get("cancelPolicyText")?.trim();
+
+    // Validate that at least one form of cancellation policy is provided
+    if (!cancelPolicyFile && !cancelPolicyText) {
+      return NextResponse.json(
+        { error: "Please provide a cancellation policy either as a file upload or by pasting the terms." },
+        { status: 400, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
     if (cancelPolicyFile && cancelPolicyFile.size > 0) {
       if (!ALLOWED_MIME.has(cancelPolicyFile.type)) {
-        return NextResponse.json({ error: "Cancellation policy must be a PDF or DOCX file." }, { status: 400 });
+        return NextResponse.json(
+          { error: "Cancellation policy must be a PDF or DOCX file." },
+          { status: 400, headers: { "Content-Type": "application/json" } }
+        );
       }
+      // Sanitize file name
+      const safeName = cancelPolicyFile.name.replace(/[/\\?%*:|"<>]/g, "-");
       uploads.push({
         key: "cancelPolicy",
-        name: cancelPolicyFile.name,
+        name: safeName,
         mimeType: cancelPolicyFile.type,
         bufferPromise: cancelPolicyFile.arrayBuffer().then(ab => Buffer.from(ab)),
       });
@@ -208,13 +325,50 @@ export async function POST(request) {
 
     return NextResponse.json(
       { success: true, id: application._id },
-      { status: 201 }
+      {
+        status: 201,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
   } catch (error) {
     console.error("[register-lodge] POST error:", error);
+
+    // Ensure we always return a valid JSON response with a string error message
+    let errorMessage = "Submission failed. Please try again.";
+    let statusCode = 500;
+
+    if (error instanceof Error && error.message) {
+      errorMessage = error.message;
+
+      // Provide more specific messages for common errors
+      if (error.message.includes("ECONNREFUSED") || error.message.includes("MongoDB")) {
+        errorMessage = "Database connection error. Please try again in a moment.";
+      } else if (error.message.includes("Google") || error.message.includes("Drive")) {
+        errorMessage = "File upload service error. Please try again in a moment.";
+      } else if (error.message.includes("quota") || error.message.includes("limit")) {
+        errorMessage = "Storage quota exceeded. Please contact support.";
+        statusCode = 507; // Insufficient Storage
+      } else if (error.message.includes("timeout")) {
+        errorMessage = "Request timed out. Please try again.";
+        statusCode = 504; // Gateway Timeout
+      } else if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT') {
+        errorMessage = "Network error. Please check your connection and try again.";
+        statusCode = 503; // Service Unavailable
+      }
+    } else if (typeof error === "string") {
+      errorMessage = error;
+    }
+
     return NextResponse.json(
-      { error: error.message || "Submission failed. Please try again." },
-      { status: 500 }
+      { error: errorMessage },
+      {
+        status: statusCode,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
     );
   }
 }
