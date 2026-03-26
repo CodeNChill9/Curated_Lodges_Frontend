@@ -133,6 +133,7 @@ const RegisterLodgePage = () => {
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [hasRestoredData, setHasRestoredData] = useState(false);
   const [showRestoredToast, setShowRestoredToast] = useState(false);
+  const [fileSizeError, setFileSizeError] = useState("");
 
   const [formFields, setFormFields] = useState({
     email: "", fullName: "", resortName: "", website: "", mainContact: "",
@@ -343,10 +344,11 @@ const RegisterLodgePage = () => {
   const handleFileChange = (e, setter) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file size (10 MB limit)
-      const maxSize = 10 * 1024 * 1024; // 10 MB in bytes
+      // Validate file size (2 MB limit)
+      const maxSize = 2 * 1024 * 1024; // 2 MB in bytes
       if (file.size > maxSize) {
-        alert(`File "${file.name}" is too large. Maximum file size is 10 MB.`);
+        setFileSizeError(`File "${file.name}" is too large. Maximum file size is 2 MB.`);
+        setTimeout(() => setFileSizeError(""), 4000); // Auto-hide after 4 seconds
         e.target.value = ''; // Clear the input
         return;
       }
@@ -533,6 +535,34 @@ const RegisterLodgePage = () => {
           <CheckCircle2 size={18} strokeWidth={2} color="#CDD999" />
           <div>
             <strong>Welcome back!</strong> Your progress has been restored. All changes are auto-saved.
+          </div>
+        </div>
+      )}
+
+      {/* Toast notification for file size error */}
+      {fileSizeError && (
+        <div style={{
+          position: "fixed",
+          top: fileSizeError ? "24px" : "-100px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "#F1663F",
+          color: "#fff",
+          padding: "14px 24px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+          zIndex: 10000,
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+          fontSize: "0.9rem",
+          transition: "top 0.4s ease, opacity 0.4s ease",
+          opacity: fileSizeError ? 1 : 0,
+          maxWidth: "90%",
+        }}>
+          <Info size={18} strokeWidth={2} color="#fff" />
+          <div>
+            <strong>Upload failed:</strong> {fileSizeError}
           </div>
         </div>
       )}
@@ -847,7 +877,7 @@ const RegisterLodgePage = () => {
                         <div className={styles.fileUploadIconWrap}><UploadCloud size={22} strokeWidth={1.5} color="#3a7a50" /></div>
                         <div className={styles.fileUploadText}>
                           <strong>{factSheetFile ? factSheetFile.name : "Click to upload PDF"}</strong>
-                          <span>PDF · Max 10 MB</span>
+                          <span>PDF · Max 2 MB</span>
                         </div>
                         <input type="file" accept=".pdf" className={styles.fileInput} onChange={(e) => handleFileChange(e, setFactSheetFile)} />
                       </label>
@@ -867,7 +897,7 @@ const RegisterLodgePage = () => {
                         <div className={styles.fileUploadIconWrap}><UploadCloud size={22} strokeWidth={1.5} color="#3a7a50" /></div>
                         <div className={styles.fileUploadText}>
                           <strong>{cancelPolicyFile ? cancelPolicyFile.name : "Upload policy document (optional)"}</strong>
-                          <span>PDF or DOCX · Max 10 MB</span>
+                          <span>PDF or DOCX · Max 2 MB</span>
                         </div>
                         <input type="file" accept=".pdf,.doc,.docx" className={styles.fileInput} onChange={(e) => { handleFileChange(e, setCancelPolicyFile); setFieldErrors((prev) => ({ ...prev, cancelPolicy: "" })); }} />
                       </label>

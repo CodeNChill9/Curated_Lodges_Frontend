@@ -47,9 +47,9 @@ async function createSubfolder(drive, folderName, parentFolderId) {
 }
 
 async function uploadToDrive(drive, fileBuffer, fileName, mimeType, folderId) {
-  // Validate file size server-side (10 MB limit)
-  if (fileBuffer.byteLength > 10 * 1024 * 1024) {
-    throw new Error(`File "${fileName}" exceeds the 10 MB limit.`);
+  // Validate file size server-side (2 MB limit)
+  if (fileBuffer.byteLength > 2 * 1024 * 1024) {
+    throw new Error(`File "${fileName}" exceeds the 2 MB limit.`);
   }
 
   const readable = new Readable();
