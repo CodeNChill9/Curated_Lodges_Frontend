@@ -105,7 +105,7 @@ export default function Footer() {
             <div className={styles.linkColumn}>
               <h3 className={styles.linkTitle}>{t('footer.contactUs', 'Contact Us')}</h3>
               <ul className={styles.linkList}>
-                <li><a href="tel:+1234567890">+91 98673 40134</a></li>
+                <li><a href="tel:+1234567890">+91 98920 99134</a></li>
                 <li><a href="mailto:info@junglore.com">info@junglore.com</a></li>
               </ul>
             </div>
